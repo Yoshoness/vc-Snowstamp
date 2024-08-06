@@ -14,7 +14,6 @@ import { addAccessory, removeAccessory } from "@api/MessageAccessories";
 import definePlugin from "@utils/types";
 import { Menu } from "@webpack/common";
 
-import { validateSnowflake } from "./convert";
 import { SnowstampIcon } from "./icon";
 import { handleSnowstamp, SnowstampAccessory } from "./snowstampAccessory";
 import { snowstamp, SnowstampValue } from "./utils";
@@ -36,10 +35,8 @@ const messageCtxPatch: NavContextMenuPatchCallback = (
             label="Snowstamp"
             icon={SnowstampIcon}
             action={async () => {
-                if (validateSnowflake(message.id)) {
-                    const stamp = await snowstamp(message.id);
-                    handleSnowstamp(message.id, stamp);
-                }
+                const stamp = await snowstamp(message.id);
+                handleSnowstamp(message.id, stamp);
             }}
         />
     );

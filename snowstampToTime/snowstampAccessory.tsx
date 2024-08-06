@@ -33,11 +33,11 @@ export function SnowstampAccessory({ message }: { message: Message; }) {
 
     return (
         <span className={cl("accessory")}>
-            <SnowstampIcon width={16} height={16} /> Sent at {timestamp.getUTCHours() < 10 ? 0 : ""}
-            {timestamp.getUTCHours()}:{timestamp.getUTCMinutes() < 10 ? 0 : ""}
-            {timestamp.getUTCMinutes()}:
-            {timestamp.getUTCSeconds() < 10 ? 0 : ""}
-            {timestamp.getUTCSeconds()} ({timestamp.getUTCMilliseconds()}ms) -{" "}
+            <SnowstampIcon width={16} height={16} /> Sent at {timestamp.getHours() < 10 ? 0 : ""}
+            {timestamp.getHours()}:{timestamp.getMinutes() < 10 ? 0 : ""}
+            {timestamp.getMinutes()}:
+            {timestamp.getSeconds() < 10 ? 0 : ""}
+            {timestamp.getSeconds()} ({timestamp.getMilliseconds()}ms) -{" "}
             <Dismiss onDismiss={() => setSnowstamp(undefined)} />
         </span>
     );
