@@ -6,13 +6,11 @@
 
 import "./styles.css";
 
-import {
-    findGroupChildrenByChildId,
-    NavContextMenuPatchCallback,
-} from "@api/ContextMenu";
+import { findGroupChildrenByChildId, NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { addAccessory, removeAccessory } from "@api/MessageAccessories";
+import { addButton, removeButton } from "@api/MessagePopover";
 import definePlugin from "@utils/types";
-import { Menu } from "@webpack/common";
+import { ChannelStore, Menu } from "@webpack/common";
 
 import { SnowstampIcon } from "./icon";
 import { handleSnowstamp, SnowstampAccessory } from "./snowstampAccessory";
@@ -20,16 +18,11 @@ import { snowstamp, SnowstampValue } from "./utils";
 
 const SnowstampSetter = new Map<string, (v: SnowstampValue) => void>();
 
-const messageCtxPatch: NavContextMenuPatchCallback = (
-    children,
-    { message }
-) => {
+const messageCtxPatch: NavContextMenuPatchCallback = (children, { message } ) => {
     const group = findGroupChildrenByChildId("copy-text", children);
     if (!group) return;
 
-    group.splice(
-        group.findIndex(c => c?.props?.id === "copy-text") + 1,
-        0,
+    group.splice(group.findIndex(c => c?.props?.id === "copy-text") + 1, 0, (
         <Menu.MenuItem
             id="vc-snowstamp"
             label="Snowstamp"
@@ -39,7 +32,7 @@ const messageCtxPatch: NavContextMenuPatchCallback = (
                 handleSnowstamp(message.id, stamp);
             }}
         />
-    );
+    ));
 };
 
 export default definePlugin({
@@ -47,16 +40,27 @@ export default definePlugin({
     description: "Converts message to timestamp.",
     authors: [{ name: "Yoshoness", id: 206081832289042432n }],
     contextMenus: {
-        message: messageCtxPatch,
+        "message": messageCtxPatch
     },
 
-    patches: [],
     start() {
-        addAccessory("vc-snowstamp", props => (
-            <SnowstampAccessory message={props.message} />
-        ));
+        addAccessory("vc-snowstamper", props => ( <SnowstampAccessory message={props.message} />));
+
+        addButton("vc-snowstamp", message => {
+            return {
+                label: "Snowstamp",
+                icon: SnowstampIcon,
+                message,
+                channel: ChannelStore.getChannel(message.channel_id),
+                onClick: async () => {
+                    const stamp = await snowstamp(message.id);
+                    handleSnowstamp(message.id, stamp);
+                }
+            };
+        });
     },
     stop() {
-        removeAccessory("vc-snowstamp");
+        removeAccessory("vc-snowstamper");
+        removeButton("vc-snowstamp");
     },
 });
