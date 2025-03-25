@@ -6,9 +6,10 @@
 
 import "./styles.css";
 
+import { settings } from "./settings";
 import { findGroupChildrenByChildId, NavContextMenuPatchCallback } from "@api/ContextMenu";
-import { addAccessory, removeAccessory } from "@api/MessageAccessories";
-import { addButton, removeButton } from "@api/MessagePopover";
+import { addMessageAccessory, removeMessageAccessory } from "@api/MessageAccessories";
+import { addMessagePopoverButton, removeMessagePopoverButton } from "@api/MessagePopover";
 import definePlugin from "@utils/types";
 import { ChannelStore, Menu } from "@webpack/common";
 
@@ -39,14 +40,15 @@ export default definePlugin({
     name: "SnowstampToTime",
     description: "Converts message to timestamp.",
     authors: [{ name: "Yoshoness", id: 206081832289042432n }],
+    settings,
     contextMenus: {
         "message": messageCtxPatch
     },
 
     start() {
-        addAccessory("vc-snowstamper", props => ( <SnowstampAccessory message={props.message} />));
+        addMessageAccessory("vc-snowstamper", props => ( <SnowstampAccessory message={props.message} />));
 
-        addButton("vc-snowstamp", message => {
+        addMessagePopoverButton("vc-snowstamp", message => {
             return {
                 label: "Snowstamp",
                 icon: SnowstampIcon,
@@ -60,7 +62,7 @@ export default definePlugin({
         });
     },
     stop() {
-        removeAccessory("vc-snowstamper");
-        removeButton("vc-snowstamp");
+        removeMessageAccessory("vc-snowstamper");
+        removeMessagePopoverButton("vc-snowstamp");
     },
 });
