@@ -9,6 +9,7 @@ import { Message } from "discord-types/general";
 
 import { cl, SnowstampIcon } from "./icon";
 import { SnowstampValue } from "./utils";
+import { settings } from "./settings";
 
 export const SnowstampSetters = new Map<string, (v: SnowstampValue) => void>();
 
@@ -30,6 +31,7 @@ export function SnowstampAccessory({ message }: { message: Message; }) {
 
     if (!snowstamp) return null;
     const timestamp = snowstamp.text;
+    const unix = snowstamp.unix;
 
     return (
         <span className={cl("accessory")}>
@@ -37,7 +39,8 @@ export function SnowstampAccessory({ message }: { message: Message; }) {
             {timestamp.getHours()}:{timestamp.getMinutes() < 10 ? 0 : ""}
             {timestamp.getMinutes()}:
             {timestamp.getSeconds() < 10 ? 0 : ""}
-            {timestamp.getSeconds()} ({timestamp.getMilliseconds()}ms) -{" "}
+            {timestamp.getSeconds()} ({timestamp.getMilliseconds()}ms)
+            {settings.store.showUnixTimestamp ? " (Unix: " + (unix) + ")" : ""} -{" "}
             <Dismiss onDismiss={() => setSnowstamp(undefined)} />
         </span>
     );

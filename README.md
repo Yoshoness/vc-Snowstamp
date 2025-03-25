@@ -1,2 +1,2 @@
 # vc-Snowstamp
-Incorporates Snowsta.mp's Snowflake to Timestamp converter in Vencord
+A Vencord plugin that incorporates Snowsta.mp's Snowflake to Timestamp converter in Vencord
