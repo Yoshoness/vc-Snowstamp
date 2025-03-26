@@ -37,7 +37,6 @@ export function validateSnowflake(snowflake, epoch = DISCORD_EPOCH) {
     }
 
     return {
-        text: timestamp,
-        unix: snowflake
+        text: timestamp
     };
 }
