@@ -15,15 +15,13 @@ import { ChannelStore, Menu } from "@webpack/common";
 
 import { SnowstampIcon } from "./icon";
 import { handleSnowstamp, SnowstampAccessory } from "./snowstampAccessory";
-import { snowstamp, SnowstampValue } from "./utils";
+import { snowstamp } from "./utils";
 
-const SnowstampSetter = new Map<string, (v: SnowstampValue) => void>();
-
-const messageCtxPatch: NavContextMenuPatchCallback = (children, { message } ) => {
-    const group = findGroupChildrenByChildId("copy-text", children);
+const messageCtxPatch: NavContextMenuPatchCallback = (children, { message }) => {
+    const group = findGroupChildrenByChildId("apps", children);
     if (!group) return;
 
-    group.splice(group.findIndex(c => c?.props?.id === "copy-text") + 1, 0, (
+    group.splice(group.findIndex(c => c?.props?.id === "apps") - 1, 0, (
         <Menu.MenuItem
             id="vc-snowstamp"
             label="Snowstamp"
@@ -38,7 +36,7 @@ const messageCtxPatch: NavContextMenuPatchCallback = (children, { message } ) =>
 
 export default definePlugin({
     name: "SnowstampToTime",
-    description: "Converts message to timestamp.",
+    description: "Converts Discord Snowflakes to formatted UNIX timestamps for accurate times.",
     authors: [{ name: "Yoshoness", id: 206081832289042432n }],
     settings,
     contextMenus: {
@@ -46,7 +44,7 @@ export default definePlugin({
     },
 
     start() {
-        addMessageAccessory("vc-snowstamper", props => ( <SnowstampAccessory message={props.message} />));
+        addMessageAccessory("vc-snowstamper", props => (<SnowstampAccessory message={props.message} />));
 
         addMessagePopoverButton("vc-snowstamp", message => {
             return {
