@@ -6,18 +6,17 @@
 
 import "./styles.css";
 
-import { settings } from "./settings";
 import { findGroupChildrenByChildId, NavContextMenuPatchCallback } from "@api/ContextMenu";
-import { addMessageAccessory, removeMessageAccessory } from "@api/MessageAccessories";
-import { addMessagePopoverButton, removeMessagePopoverButton } from "@api/MessagePopover";
 import definePlugin from "@utils/types";
+import { Message } from "@vencord/discord-types";
 import { ChannelStore, Menu } from "@webpack/common";
 
+import { settings } from "./settings";
 import { SnowstampIcon } from "./icon";
 import { handleSnowstamp, SnowstampAccessory } from "./snowstampAccessory";
 import { snowstamp } from "./utils";
 
-const messageCtxPatch: NavContextMenuPatchCallback = (children, { message }) => {
+const messageCtxPatch: NavContextMenuPatchCallback = (children, { message }: { message: Message; }) => {
     const group = findGroupChildrenByChildId("apps", children);
     if (!group) return;
 
@@ -43,10 +42,11 @@ export default definePlugin({
         "message": messageCtxPatch
     },
 
-    start() {
-        addMessageAccessory("vc-snowstamper", props => (<SnowstampAccessory message={props.message} />));
+    renderMessageAccessory: props => <SnowstampAccessory message={props.message} />,
 
-        addMessagePopoverButton("vc-snowstamp", message => {
+    messagePopoverButton: {
+        icon: SnowstampIcon,
+        render(message: Message) {
             return {
                 label: "Snowstamp",
                 icon: SnowstampIcon,
@@ -57,10 +57,6 @@ export default definePlugin({
                     handleSnowstamp(message.id, stamp);
                 }
             };
-        });
-    },
-    stop() {
-        removeMessageAccessory("vc-snowstamper");
-        removeMessagePopoverButton("vc-snowstamp");
+        }
     },
 });

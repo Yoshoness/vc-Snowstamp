@@ -6,21 +6,13 @@
 
 import { classNameFactory } from "@api/Styles";
 import { classes } from "@utils/misc";
+import { IconComponent } from "@utils/types";
 
 export const cl = classNameFactory("vc-snowstamp-");
 
-export function SnowstampIcon({
-    height = 24,
-    width = 24,
-    className,
-}: {
-    height?: number;
-    width?: number;
-    className?: string;
-}) {
+export const SnowstampIcon: IconComponent = ({ height = 20, width = 20, className }) => {
     return (
-        <svg
-            viewBox="0 0 218 226"
+        <svg viewBox="0 0 218 226"
             height={height}
             width={width}
             className={classes(cl("icon"), className)}
@@ -40,5 +32,7 @@ export function SnowstampIcon({
         </svg>
     );
 }
+
+
 
 

@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { Message } from "@vencord/discord-types";
 import { useEffect, useState } from "@webpack/common";
-import { Message } from "discord-types/general";
 
 import { cl, SnowstampIcon } from "./icon";
 import { SnowstampValue } from "./utils";
@@ -15,6 +15,14 @@ export const SnowstampSetters = new Map<string, (v: SnowstampValue) => void>();
 
 export function handleSnowstamp(messageId: string, data: SnowstampValue) {
     SnowstampSetters.get(messageId)!(data);
+}
+
+function Dismiss({ onDismiss }: { onDismiss: () => void; }) {
+    return (
+        <button onClick={onDismiss} className={cl("dismiss")}>
+            Dismiss
+        </button>
+    );
 }
 
 export function SnowstampAccessory({ message }: { message: Message; }) {
@@ -34,7 +42,7 @@ export function SnowstampAccessory({ message }: { message: Message; }) {
 
     return (
         <span className={cl("accessory")}>
-            <SnowstampIcon width={16} height={16} /> Sent at {timestamp.getHours() < 10 ? 0 : ""}
+            <SnowstampIcon width={16} height={16} className={cl("accessory-icon")} /> Sent at {timestamp.getHours() < 10 ? 0 : ""}
             {timestamp.getHours()}:{timestamp.getMinutes() < 10 ? 0 : ""}
             {timestamp.getMinutes()}:
             {timestamp.getSeconds() < 10 ? 0 : ""}
@@ -42,13 +50,5 @@ export function SnowstampAccessory({ message }: { message: Message; }) {
             {settings.store.showUnixTimestamp ? " (Unix: " + (timestamp.getTime()) + ")" : ""} -{" "}
             <Dismiss onDismiss={() => setSnowstamp(undefined)} />
         </span>
-    );
-}
-
-function Dismiss({ onDismiss }: { onDismiss: () => void; }) {
-    return (
-        <button onClick={onDismiss} className={cl("dismiss")}>
-            Dismiss
-        </button>
     );
 }
