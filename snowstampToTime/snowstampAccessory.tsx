@@ -38,16 +38,13 @@ export function SnowstampAccessory({ message }: { message: Message; }) {
     }, []);
 
     if (!snowstamp) return null;
-    const timestamp = snowstamp.text;
+    const messageSent = snowstamp.text;
+    const time = messageSent.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
 
     return (
         <span className={cl("accessory")}>
-            <SnowstampIcon width={16} height={16} className={cl("accessory-icon")} /> Sent at {timestamp.getHours() < 10 ? 0 : ""}
-            {timestamp.getHours()}:{timestamp.getMinutes() < 10 ? 0 : ""}
-            {timestamp.getMinutes()}:
-            {timestamp.getSeconds() < 10 ? 0 : ""}
-            {timestamp.getSeconds()} ({timestamp.getMilliseconds()}ms)
-            {settings.store.showUnixTimestamp ? " (Unix: " + (timestamp.getTime()) + ")" : ""} -{" "}
+            <SnowstampIcon width={16} height={16} className={cl("accessory-icon")} /> Sent at {time} ({messageSent.getMilliseconds()}ms)
+            {settings.store.showUnixTimestamp ? " (Unix: " + (messageSent.getTime()) + ")" : ""} -{" "}
             <Dismiss onDismiss={() => setSnowstamp(undefined)} />
         </span>
     );
